@@ -37,6 +37,7 @@ const cartoLightBaseLayer = {
 export const getOSBaseMap = (): Style => {
   return {
     'version': 8,
+    'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
 
     /**
      * Census Tract Source
@@ -97,6 +98,9 @@ export const getOSBaseMap = (): Style => {
         'id': constants.BASE_MAP_LAYER_ID,
         'source': constants.BASE_MAP_SOURCE_NAME,
         'type': 'raster',
+        'layout': {
+          'visibility': 'visible',
+        },
         'minzoom': constants.GLOBAL_MIN_ZOOM,
         'maxzoom': constants.GLOBAL_MAX_ZOOM,
       },
@@ -118,6 +122,9 @@ export const getOSBaseMap = (): Style => {
         'id': constants.LOW_ZOOM_LAYER_ID,
         'source': constants.LOW_ZOOM_SOURCE_NAME,
         'source-layer': constants.SCORE_SOURCE_LAYER,
+        'layout': {
+          'visibility': 'visible',
+        },
         /**
          * This shows features where the low score > score boundary threshold.
          * In other words, this filter out non-prioritized features
@@ -140,6 +147,9 @@ export const getOSBaseMap = (): Style => {
         'id': constants.HIGH_ZOOM_LAYER_ID,
         'source': constants.HIGH_ZOOM_SOURCE_NAME,
         'source-layer': constants.SCORE_SOURCE_LAYER,
+        'layout': {
+          'visibility': 'visible',
+        },
         /**
          * The SCORE_PROPERTY_HIGH is a boolean value. True for
          * prioritized and false for non-priorirized
@@ -160,6 +170,9 @@ export const getOSBaseMap = (): Style => {
         'id': constants.PRIORITIZED_HIGH_ZOOM_LAYER_ID,
         'source': constants.HIGH_ZOOM_SOURCE_NAME,
         'source-layer': constants.SCORE_SOURCE_LAYER,
+        'layout': {
+          'visibility': 'visible',
+        },
         /**
          * The SCORE_PROPERTY_HIGH is a boolean value. True for
          * prioritized and false for non-priorirized
@@ -181,6 +194,9 @@ export const getOSBaseMap = (): Style => {
         'id': constants.FEATURE_BORDER_LAYER_ID,
         'source': constants.HIGH_ZOOM_SOURCE_NAME,
         'source-layer': constants.SCORE_SOURCE_LAYER,
+        'layout': {
+          'visibility': 'visible',
+        },
         'type': 'line',
         'paint': {
           'line-color': constants.FEATURE_BORDER_COLOR,
@@ -188,6 +204,23 @@ export const getOSBaseMap = (): Style => {
           'line-opacity': constants.FEATURE_BORDER_OPACITY,
         },
         'minzoom': constants.GLOBAL_MIN_ZOOM_FEATURE_BORDER,
+        'maxzoom': constants.GLOBAL_MAX_ZOOM_FEATURE_BORDER,
+      },
+      {
+        'id': 'text-layer', // A unique ID for this layer
+        'type': 'symbol', // This type is used for text labels
+        'source': constants.HIGH_ZOOM_SOURCE_NAME, // Assuming 'Name' field is in this source
+        'source-layer': 'Points_of_Interest_-_Community', // The layer that contains the 'Name' field
+        'layout': {
+          'text-field': '{Name}', // Reference to the 'Name' field in your data
+          'text-size': 12, // Text size
+          // Other layout properties like 'text-anchor' or 'text-offset' can be added here
+        },
+        'paint': {
+          'text-color': '#000000', // Text color
+          // Other paint properties can be added here
+        },
+        'minzoom': constants.GLOBAL_MIN_ZOOM_HIGH, // Adjust minzoom and maxzoom as needed
         'maxzoom': constants.GLOBAL_MAX_ZOOM_FEATURE_BORDER,
       },
     ],

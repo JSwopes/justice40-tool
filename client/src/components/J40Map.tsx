@@ -12,7 +12,9 @@ import ReactMapGL, {
   Popup,
   FlyToInterpolator,
   FullscreenControl,
-  MapRef} from 'react-map-gl';
+  MapRef,
+  Source,
+  Layer} from 'react-map-gl';
 import {useIntl} from 'gatsby-plugin-intl';
 import bbox from '@turf/bbox';
 import * as d3 from 'd3-ease';
@@ -342,7 +344,9 @@ const J40Map = ({location}: IJ40Interface) => {
           // access token is j40StylesReadToken
           mapboxApiAccessToken={
             process.env.MAPBOX_STYLES_READ_TOKEN ?
-            process.env.MAPBOX_STYLES_READ_TOKEN : ''}
+            // eslint-disable-next-line max-len
+            process.env.MAPBOX_STYLES_READ_TOKEN : 'pk.eyJ1IjoiamtzZGFjaGllZiIsImEiOiJjbHJwZ3o0a3gwNXVmMndvMDU3bXJla2p2In0.mf6v0KbIjyf85DCPr6Lubw'}
+
 
           // ****** Map state props: ******
           // http://visgl.github.io/react-map-gl/docs/api-reference/interactive-map#map-state
@@ -386,6 +390,42 @@ const J40Map = ({location}: IJ40Interface) => {
             selectedFeature={selectedFeature}
             selectedFeatureId={selectedFeatureId}
           />
+
+          <Source
+            id="myTilesetSource"
+            type="vector"
+            url="mapbox://jksdachief.bt31fi4l"
+          >
+            {/* Add a layer for your tileset */}
+            <Layer
+              id="text-Layer"
+              type="symbol"
+              source="myTilesetSource"
+              source-layer="Points_of_Interest_-_Community"
+              layout={{
+                'text-field': '{Name}', // Use the 'Name' field from your data
+                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                'text-size': 10, // Size of the text
+                // ... additional layout properties for text
+              }}
+              paint={{
+                'text-color': '#000000', // Color of the text
+                // ... additional paint properties for text
+              }}
+            />
+
+            <Layer
+              id="myTilesetSource"
+              type="circle" // Change the type based on your data (e.g., 'line', 'circle', 'symbol')
+              source="myTilesetSource"
+              source-layer="Points_of_Interest_-_Community"// Replace with your source layer name
+              paint={{
+                'circle-radius': 5, // Size of the circle
+                'circle-color': '#007cbf', // Color of the circle
+                // ... additional paint properties
+              }}
+            />
+          </Source>
 
           {/* This is the first overlayed row on the map: Search and Geolocation */}
           <div className={styles.mapHeaderRow}>

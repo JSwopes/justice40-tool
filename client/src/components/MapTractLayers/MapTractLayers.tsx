@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+/* eslint-disable no-unused-vars */
 import React, {useMemo} from 'react';
 import {Source, Layer} from 'react-map-gl';
 import {AnyLayer} from 'mapbox-gl';
@@ -79,91 +81,7 @@ const MapTractLayers = ({
 
     // In this case the MapBox token is found and All source(s)/layer(s) are returned.
     <>
-      <Source
-        id={constants.LOW_ZOOM_SOURCE_NAME}
-        type="vector"
-        promoteId={constants.GEOID_PROPERTY}
-        tiles={[featureURLForTilesetName('low')]}
-        maxzoom={constants.GLOBAL_MAX_ZOOM_LOW}
-        minzoom={constants.GLOBAL_MIN_ZOOM_LOW}
-      >
 
-        {/* Low zoom layer (static) - prioritized features only */}
-        <Layer
-          id={constants.LOW_ZOOM_LAYER_ID}
-          source-layer={constants.SCORE_SOURCE_LAYER}
-          filter={['>', constants.SCORE_PROPERTY_LOW, constants.SCORE_BOUNDARY_THRESHOLD]}
-          type='fill'
-          paint={{
-            'fill-color': constants.PRIORITIZED_FEATURE_FILL_COLOR,
-            'fill-opacity': constants.LOW_ZOOM_PRIORITIZED_FEATURE_FILL_OPACITY}}
-          maxzoom={constants.GLOBAL_MAX_ZOOM_LOW}
-          minzoom={constants.GLOBAL_MIN_ZOOM_LOW}
-        />
-      </Source>
-
-      {/* The high zoom source */}
-      <Source
-        id={constants.HIGH_ZOOM_SOURCE_NAME}
-        type="vector"
-        promoteId={constants.GEOID_PROPERTY}
-        tiles={[featureURLForTilesetName('high')]}
-        maxzoom={constants.GLOBAL_MAX_ZOOM_HIGH}
-        minzoom={constants.GLOBAL_MIN_ZOOM_HIGH}
-      >
-
-        {/* High zoom layer (static) - non-prioritized features only */}
-        <Layer
-          id={constants.HIGH_ZOOM_LAYER_ID}
-          source-layer={constants.SCORE_SOURCE_LAYER}
-          filter={['==', constants.SCORE_PROPERTY_HIGH, false]}
-          type='fill'
-          paint={{
-            'fill-opacity': constants.NON_PRIORITIZED_FEATURE_FILL_OPACITY,
-          }}
-          minzoom={constants.GLOBAL_MIN_ZOOM_HIGH}
-        />
-
-        {/* High zoom layer (static) - prioritized features only */}
-        <Layer
-          id={constants.PRIORITIZED_HIGH_ZOOM_LAYER_ID}
-          source-layer={constants.SCORE_SOURCE_LAYER}
-          filter={['==', constants.SCORE_PROPERTY_HIGH, true]}
-          type='fill'
-          paint={{
-            'fill-color': constants.PRIORITIZED_FEATURE_FILL_COLOR,
-            'fill-opacity': constants.HIGH_ZOOM_PRIORITIZED_FEATURE_FILL_OPACITY,
-          }}
-          minzoom={constants.GLOBAL_MIN_ZOOM_HIGH}
-        />
-
-        {/* High zoom layer (static) - controls the border between features */}
-        <Layer
-          id={constants.FEATURE_BORDER_LAYER_ID}
-          source-layer={constants.SCORE_SOURCE_LAYER}
-          type='line'
-          paint={{
-            'line-color': constants.FEATURE_BORDER_COLOR,
-            'line-width': constants.FEATURE_BORDER_WIDTH,
-            'line-opacity': constants.FEATURE_BORDER_OPACITY,
-          }}
-          maxzoom={constants.GLOBAL_MAX_ZOOM_FEATURE_BORDER}
-          minzoom={constants.GLOBAL_MIN_ZOOM_FEATURE_BORDER}
-        />
-
-        {/* High zoom layer (dynamic) - border styling around the selected feature */}
-        <Layer
-          id={constants.SELECTED_FEATURE_BORDER_LAYER_ID}
-          source-layer={constants.SCORE_SOURCE_LAYER}
-          filter={filter} // This filter filters out all other features except the selected feature.
-          type='line'
-          paint={{
-            'line-color': constants.SELECTED_FEATURE_BORDER_COLOR,
-            'line-width': constants.SELECTED_FEATURE_BORDER_WIDTH,
-          }}
-          minzoom={constants.GLOBAL_MIN_ZOOM_HIGH}
-        />
-      </Source>
     </>
   ): (
 
@@ -171,9 +89,31 @@ const MapTractLayers = ({
      * In this case the MapBox token is NOT found and ONLY interactive source(s)/layer(s) are returned
      * In this case, the other layers (non-interactive) are provided by getOSBaseMap
      */
+    <>
+   <Source
+      id="myTilesetSource"
+      type="vector"
+      url="mapbox://jksdachief.bt31fi4l"
+    >
+      {/* Add a layer for your tileset */}
+      <Layer
+        id="myTilesetLayer"
+        type="symbol" // Change the type based on your data (e.g., 'line', 'circle', 'symbol')
+        source="myTilesetSource"
+        source-layer={constants.SCORE_SOURCE_LAYER} // Replace with your source layer name
+        layout={{
+          'icon-image': 'marker-15', // Use an icon from Mapbox's standard icon set or your custom icon
+          'text-field': '{fieldName}', // Replace with your field name for labels
+          'text-offset': [0, 0.6],
+          'text-anchor': 'top',
+        }}
+
+      />
+    </Source>
+
     <Source
       id={constants.HIGH_ZOOM_SOURCE_NAME}
-      type="vector"
+      type='vector'
       promoteId={constants.GEOID_PROPERTY}
       tiles={[featureURLForTilesetName('high')]}
       maxzoom={constants.GLOBAL_MAX_ZOOM_HIGH}
@@ -193,6 +133,7 @@ const MapTractLayers = ({
         minzoom={constants.GLOBAL_MIN_ZOOM_HIGH}
       />
     </Source>
+    </>
   );
 };
 
